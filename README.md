@@ -1,9 +1,9 @@
 # Learning multiple multicriteria additive models from heterogeneous preferences
 
-> Vincent Auriau, Khaled Belahcène, Emmanuel Malherbe, Vincent Mousseau\
-> In ADT 2024.
+> Vincent Auriau, Khaled Belahcène, Emmanuel Malherbe, Vincent Mousseau <br>
+> In ADT 2024. <br>
 
-> Paper:
+> Paper:<br>
 
 <img align="right" width="200" src="doc/icon.png" />
 
@@ -13,7 +13,7 @@
 Clone this repository:
 
 ```bash
-git clone 
+git clone https://github.com/artefactory/learning-heterogeneous-preferences.git
 ```
 
 Install the dependencies:
@@ -27,17 +27,16 @@ Install the dependencies:
 ## Using the model on you own data
 
 ## License
-This work is under the [MIT](./LICENSE) License.
+This work is under the [MIT](./LICENSE) license.
 
 ## Citation
 If you find this work useful for your research, please cite our paper:
 
-```bash
+```
 @inproceedings{AuriauPLS:2024,
 title={},
 author={},
 booktitle={},
 year={2024},
 }
-
 ```
