@@ -1,9 +1,14 @@
+<div align="center">
+
 # Learning multiple multicriteria additive models from heterogeneous preferences
 
-> Vincent Auriau, Khaled Belahcène, Emmanuel Malherbe, Vincent Mousseau <br>
-> In ADT 2024. <br>
 
-> Paper:<br>
+Vincent Auriau, Khaled Belahcène, Emmanuel Malherbe, Vincent Mousseau <br>
+In ADT 2024. <br>
+
+[[Paper]]()  [[Oral Presentation]]()<br>
+
+</div>
 
 <img align="right" width="200" src="doc/icon.png" />
 
