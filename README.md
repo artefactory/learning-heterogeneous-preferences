@@ -67,7 +67,6 @@ All the models have lookalike signatures, in particular, in ```.fit(X, Y)```, X 
 
 More details are given in the docstrings of the models if you want to better understand the different hyper-parameters.
 
-
 ## License
 This work is under the [MIT](./LICENSE) license.
 
