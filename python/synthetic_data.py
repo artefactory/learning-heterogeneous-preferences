@@ -61,7 +61,7 @@ class SyntheticDataGenerator:
     def instantiate(self):
         self.generated_parameters = {}
         dm_utilities = []
-        for i in range(self.num_decision_makers):
+        for i in range(self.n_clusters):
             uf, params = self._generate_marginal_utilites_functions()
             dm_utilities.append(uf)
             self.generated_parameters[f"DM_{i}"] = params
@@ -80,7 +80,7 @@ class SyntheticDataGenerator:
         params = {"created_functions": funcs, "weights": weights}
 
         marginal_weights = get_random_uniform_normalized_vector(
-            num_values=self.num_features, decimals=self.decimals
+            num_values=self.n_criteria, decimals=self.decimals
         )
         params["marginal_weights"] = marginal_weights
 
@@ -114,14 +114,14 @@ class SyntheticDataGenerator:
         utilities = [[], []]
         clusters = []
         # Useless now that we have clusters
-        populations = [0] * self.num_decision_makers
+        populations = [0] * self.n_clusters
         if not isinstance(num_pairs, list):
-            num_pairs = [np.ceil(num_pairs / self.num_decision_makers)] * self.num_decision_makers
+            num_pairs = [np.ceil(num_pairs / self.n_clusters)] * self.n_clusters
         while len(X) < sum(num_pairs):
             if verbose > 0:
                 print(f"{len(X)} events have been created as of now", end="\r")
-            x = np.around(np.random.uniform(0, 1, self.num_features), decimals=self.decimals)
-            y = np.around(np.random.uniform(0, 1, self.num_features), decimals=self.decimals)
+            x = np.around(np.random.uniform(0, 1, self.n_criteria), decimals=self.decimals)
+            y = np.around(np.random.uniform(0, 1, self.n_criteria), decimals=self.decimals)
 
             ux = np.around(self.utility(x), decimals=self.decimals)
             uy = np.around(self.utility(y), decimals=self.decimals)
@@ -162,7 +162,7 @@ class SyntheticDataGenerator:
             print("Clusters Populations", populations)
         additional_info = {}
         if "weights" in self.generated_parameters[f"DM_0"]:
-            for i in range(self.num_decision_makers):
+            for i in range(self.n_clusters):
                 additional_info[f"weights_{i}"] = self.generated_parameters[f"DM_{i}"]["weights"]
                 additional_info[f"marginal_weights_{i}"] = self.generated_parameters[f"DM_{i}"][
                     "marginal_weights"

@@ -1,7 +1,9 @@
+import os
+
 import gurobipy as gp
 import numpy as np
 
-class GurobiUTitlityAdditive(object):
+class UTA(object):
     """Gurobi based implementation of UTA."""
 
     def __init__(self, n_pieces, epsilon=1e-4):
@@ -237,7 +239,7 @@ class GurobiUTitlityAdditive(object):
         return utilities
 
 
-class GurobiClusterUTitlityAdditive(object):
+class ClusterUTA(object):
     """Gurobi based MIP model to learn several UTA models."""
 
     def __init__(self, n_pieces, n_clusters, epsilon=1e-4):
@@ -478,7 +480,7 @@ class GurobiClusterUTitlityAdditive(object):
         self.solver.update()
 
         # Solving --
-        
+
         self.solver.optimize()
         self.status = self.solver.Status
 
@@ -520,3 +522,13 @@ class GurobiClusterUTitlityAdditive(object):
             utilities_by_cluster.append(self._get_total_utility(X, coeffs))
 
         return np.stack(utilities_by_cluster, axis=1)
+
+    def save_model(self, dirpath):
+        """Save the model coefficients.
+
+        Parameters
+        ----------
+        dirpath : str
+            directory path where to save the coeffs to
+        """
+        np.save(os.path.join(dirpath, "cluster_uta_coefficients.npy"), self.coeffs)
