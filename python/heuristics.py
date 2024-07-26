@@ -38,7 +38,7 @@ def kmeans_pp_init(data_points, num_clusters=2, dist="l2"):
     selected_points = np.array([init_point])
     for i in range(num_clusters - 1):
         # Proba as distance between points and selected points
-        Ps = np.array([get_min_distance(x, Cs)[0] for x in data_points])
+        Ps = np.array([get_min_distance(x, selected_points)[0] for x in data_points])
         Ps = Ps / np.sum(Ps)
 
         # Random choice with probabilities
@@ -240,7 +240,7 @@ class PLSHeuristic(object):
         if self.init == "kmeans++":
             cluster_centers = kmeans_pp_init(X - Y, num_clusters=self.n_clusters)
             indexes = np.array(
-                [D(X[i] - Y[i], clusters=cluster_centers)[1] for i in range(len(X))]
+                [get_min_distance(X[i] - Y[i], clusters=cluster_centers)[1] for i in range(len(X))]
             )
 
         else:
@@ -266,7 +266,7 @@ class PLSHeuristic(object):
                     )
                     indexes = np.array(
                         [
-                            D(X[i] - Y[i], clusters=cluster_centers)[1]
+                            get_min_distance(X[i] - Y[i], clusters=cluster_centers)[1]
                             for i in range(len(X))
                         ]
                     )
@@ -278,66 +278,39 @@ class PLSHeuristic(object):
                 models = []
                 for j in range(self.n_clusters):
                     bool_index = indexes == j
-                    model, history = self._maximization(
+                    model, history = self._update(
                         X[bool_index], Y[bool_index], verbose=verbose
                     )
                     models.append(model)
                 self.models = models
             else:
-                if not self.use_proba:
-                    # Expectation
-                    utilities, new_indexes, weights = self._expectation(X, Y)
+                # Expectation
+                utilities, new_indexes = self._assignment(X, Y)
 
-                    if self.stopping_criterion == "partitioning":
-                        if (new_indexes == indexes).all():
-                            if verbose > 0:
-                                print(
-                                    "Ending fit before num_epochs reached as partitioning has reached a stable state"
-                                )
-                            break
-                    indexes = new_indexes
+                if self.stopping_criterion == "partitioning":
+                    if (new_indexes == indexes).all():
+                        if verbose > 0:
+                            print(
+                                "Ending fit before num_epochs reached as partitioning has reached a stable state"
+                            )
+                        break
+                indexes = new_indexes
 
-                    loop_cluster_losses = []
-                    models = []
+                loop_cluster_losses = []
+                models = []
 
-                    for j in range(self.n_clusters):
-                        bool_index = indexes == j
-                        model, history = self._maximization(
-                            X[bool_index],
-                            Y[bool_index],
-                            sample_weight=weights,
-                            verbose=verbose,
-                        )
-                        models.append(model)
+                for j in range(self.n_clusters):
+                    bool_index = indexes == j
+                    model, history = self._update(
+                        X[bool_index],
+                        Y[bool_index],
+                        verbose=verbose,
+                    )
+                    models.append(model)
 
-                        loop_cluster_losses.append(np.sum(list(history[0].values())))
-                    all_losses.append(loop_cluster_losses)
+                    loop_cluster_losses.append(np.sum(list(history[0].values())))
+                all_losses.append(loop_cluster_losses)
 
-                else:
-                    ### TODO
-                    # Expectation
-                    if i != 0 or self.init != "kmeans++":
-                        utilities, _ = self._expectation(X, Y)
-                        cluster_probabilities = self._utilities_to_probabilities(
-                            utilities=utilities
-                        )
-                    elif i == 0 and self.init == "kmeans++":
-                        cluster_probabilities = np.stack(
-                            [indexes == j for j in range(self.n_clusters)], axis=1
-                        ).astype(np.float32)
-
-                    lis = []
-                    pred_W = []
-                    for j in range(self.n_clusters):
-                        lss_i, pred_wi = self._weighted_maximization(
-                            X, Y, cluster_probabilities[:, j]
-                        )
-
-                        lis.append(lss_i)
-                        pred_W.append(pred_wi)
-
-                    all_losses.append(lis)
-                    model_coeffs = np.array(pred_W)
 
                 if np.sum(loop_cluster_losses) < 1e-5:
                     model_coeffs = np.stack([m.coeffs for m in self.models], axis=0)
@@ -378,5 +351,5 @@ class PLSHeuristic(object):
         return utilities
 
     def predict_cluster(self, X, Y):
-        utilities, clusters, _ = self._expectation(X, Y)
+        utilities, clusters, _ = self._assignment(X, Y)
         return clusters
