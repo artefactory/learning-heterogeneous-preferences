@@ -48,3 +48,20 @@ booktitle={Algorithmic Decision Theory},
 year={2024},
 }
 ```
+
+
+<p align="center">
+  <a href="https://www.artefact.com/data-consulting-transformation/artefact-research-center/">
+    <img src="./doc/logo_arc.png" height="60" />
+  </a>
+  &emsp;
+  &emsp;
+  <a href="https://mics.centralesupelec.fr/">
+    <img src="./doc/logo_CS.png" height="65" />
+  </a>
+</p>
+  &emsp;
+  &emsp;
+  <a href="https://www.universite-paris-saclay.fr/">
+    <img src="./doc/logo_paris_saclay.png" height="65" />
+  </a>
