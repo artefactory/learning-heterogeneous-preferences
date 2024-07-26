@@ -36,7 +36,11 @@ python run_synthetic_experiments save_xps --repetitions 4 --n_clusters 2 3 4 \
 --n_criteria 6 --learning_set_size 128 1024 --error 0 5
 ```
 
-It will save results in `save_xps`for four different dataset with all the combinations of parameters: n_clusers = [1, 2, 3]; n_criteria=6, learning_set_size=[128, 1024] and error=[0, 5].
+It will save results in `save_xps` for four different datasets with all the combinations of parameters: 
+- n_clusters = [1, 2, 3]
+- n_criteria=6
+- learning_set_size=[128, 1024]
+- error=[0, 5]
 
 ## Real-World Experiments
 
