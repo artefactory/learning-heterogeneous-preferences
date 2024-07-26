@@ -8,7 +8,8 @@ import numpy as np
 import pandas as pd
 import tqdm
 from python.synthetic_data import SyntheticDataGenerator
-from python.models import ClusterUTA
+from python.models import ClusterUTA, UTA
+from python.heuristics import PLSHeuristic
 
 
 def evaluation_routine(
@@ -99,48 +100,48 @@ def evaluation_routine(
     )
 
     df_u_train_x.to_csv(
-        os.path.join(results_dir, f"uta_u_train_x_pred.csv"), index=False
+        os.path.join(results_dir, f"milo_u_x_train.csv"), index=False
     )
-    df_u_test_x.to_csv(os.path.join(results_dir, f"uta_u_test_x_pred.csv"), index=False)
+    df_u_test_x.to_csv(os.path.join(results_dir, f"milo_u_x_test.csv"), index=False)
     df_u_train_y.to_csv(
-        os.path.join(results_dir, f"uta_u_train_y_pred.csv"), index=False
+        os.path.join(results_dir, f"milo_u_y_train.csv"), index=False
     )
-    df_u_test_y.to_csv(os.path.join(results_dir, f"uta_u_test_y_pred.csv"), index=False)
+    df_u_test_y.to_csv(os.path.join(results_dir, f"milo_u_y_test.csv"), index=False)
 
     model.save_model(results_dir)
-    np.save(os.path.join(results_dir, f"uta_fit_time.npy"), np.array(uta_train_time))
+    np.save(os.path.join(results_dir, f"milo_fit_time.npy"), np.array(uta_train_time))
 
     with open(os.path.join(results_dir, "status.txt"), "w") as f:
         f.write(f"{model.status}\n")
 
-    """
-    model = ExpectationMaximizationUtilityAdditive(
-        models_class=GurobiUTA, n_clusters=n_decisions_makers, n_init=20
+    
+    model = PLSHeuristic(
+        models_class=UTA, n_clusters=n_clusters, n_init=20
     )
     t_start = time.time()
     hist = model.fit(X_train, Y_train)
-    print("EM fitted")
-    em_train_time = time.time() - t_start
+    heuristic_train_time = time.time() - t_start
 
     U_train = model.predict_utility(X_train)
     df_u_train_x = pd.DataFrame(
-        U_train, columns=[f"u_x_train_{i}" for i in range(n_decisions_makers)]
+        U_train, columns=[f"u_x_train_{i}" for i in range(n_clusters)]
     )
     U_test = model.predict_utility(X_test)
-    df_u_test_x = pd.DataFrame(U_test, columns=[f"u_x_test_{i}" for i in range(n_decisions_makers)])
+    df_u_test_x = pd.DataFrame(U_test, columns=[f"u_x_test_{i}" for i in range(n_clusters)])
 
     U_train = model.predict_utility(Y_train)
     df_u_train_y = pd.DataFrame(
-        U_train, columns=[f"u_y_train_{i}" for i in range(n_decisions_makers)]
+        U_train, columns=[f"u_y_train_{i}" for i in range(n_clusters)]
     )
     U_test = model.predict_utility(Y_test)
-    df_u_test_y = pd.DataFrame(U_test, columns=[f"u_y_test_{i}" for i in range(n_decisions_makers)])
+    df_u_test_y = pd.DataFrame(U_test, columns=[f"u_y_test_{i}" for i in range(n_clusters)])
 
-    df_u_train_x.to_csv(os.path.join(base_dir, f"results/{id}/em_u_train_x_pred.csv"), index=False)
-    df_u_test_x.to_csv(os.path.join(base_dir, f"results/{id}/em_u_test_x_pred.csv"), index=False)
-    df_u_train_y.to_csv(os.path.join(base_dir, f"results/{id}/em_u_train_y_pred.csv"), index=False)
-    df_u_test_y.to_csv(os.path.join(base_dir, f"results/{id}/em_u_test_y_pred.csv"), index=False)
-    """
+    df_u_train_x.to_csv(os.path.join(results_dir, "heuristic_u_x_train.csv"), index=False)
+    df_u_test_x.to_csv(os.path.join(results_dir, "heuristic_u_x_test.csv"), index=False)
+    df_u_train_y.to_csv(os.path.join(results_dir, "heuristic_u_y_train.csv"), index=False)
+    df_u_test_y.to_csv(os.path.join(results_dir, "heuristic_u_y_test.csv"), index=False)
+    np.save(os.path.join(results_dir, f"heuristic_fit_time.npy"), np.array(heuristic_train_time))
+    
 
 
 if __name__ == "__main__":
