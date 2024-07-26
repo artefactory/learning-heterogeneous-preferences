@@ -29,6 +29,15 @@ conda env create -f env.yml
 
 ## Syntetic Experiments
 
+In order to run the experiments with synthetic data you can use the following command:
+
+```bash
+python run_synthetic_experiments save_xps --repetitions 4 --n_clusters 2 3 4 \
+--n_criteria 6 --learning_set_size 128 1024 --error 0 5
+```
+
+It will save results in `save_xps`for four different dataset with all the combinations of parameters: n_clusers = [1, 2, 3]; n_criteria=6, learning_set_size=[128, 1024] and error=[0, 5].
+
 ## Real-World Experiments
 
 The stated preferences for car dataset used in the paper can be downloaded [here](https://github.com/artefactory/choice-learn/blob/main/choice_learn/datasets/data/car.csv.gz).
