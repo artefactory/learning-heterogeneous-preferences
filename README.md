@@ -59,9 +59,9 @@ year={2024},
   <a href="https://mics.centralesupelec.fr/">
     <img src="./doc/logo_CS.png" height="65" />
   </a>
-</p>
   &emsp;
   &emsp;
   <a href="https://www.universite-paris-saclay.fr/">
     <img src="./doc/logo_paris_saclay.png" height="65" />
   </a>
+</p>
