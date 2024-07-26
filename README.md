@@ -3,7 +3,7 @@
 # Learning multiple multicriteria additive models from heterogeneous preferences
 
 
-Vincent Auriau, Khaled Belahcene, Emmanuel Malherbe, Vincent Mousseau <br>
+Vincent Auriau, Khaled Belahcène, Emmanuel Malherbe, Vincent Mousseau <br>
 In ADT 2024. <br>
 
 [[Paper]]()  [[Oral Presentation]]()<br>
