@@ -31,8 +31,29 @@ conda env create -f env.yml
 
 ## Real-World Experiments
 
+The stated preferences for car dataset used in the paper can be downloaded [here](https://github.com/artefactory/choice-learn/blob/main/choice_learn/datasets/data/car.csv.gz).
+It is also part of the [choice-learn](https://pypi.org/project/choice-learn/) package that can be installed with `pip install choice-learn`.
+
+
 ## Using the model on you own data
 <img align="right" width="200" src="doc/icon.png" />
+
+The different models can be used on your own data as follows:
+
+```python
+from python.models import UTA, ClusterUTA
+from python.heuristics import Heuristic
+
+model = model(**params)
+model.fit(X, Y)
+
+print(model.predict_utilitie(X))
+````
+
+All the models have lookalike signatures, in particular, in ```.fit(X, Y)```, X and Y must be:
+
+More details are given in the docstrings of the models if you want to better understand the different hyper-parameters.
+
 
 ## License
 This work is under the [MIT](./LICENSE) license.
