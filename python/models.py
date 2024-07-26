@@ -3,6 +3,7 @@ import os
 import gurobipy as gp
 import numpy as np
 
+
 class UTA(object):
     """Gurobi based implementation of UTA."""
 
@@ -94,7 +95,9 @@ class UTA(object):
         solver = gp.Model("UTA")
         return solver
 
-    def fit(self, X, Y, sample_weight=None, time_limit=None, majoring_value=2, verbose=0):
+    def fit(
+        self, X, Y, sample_weight=None, time_limit=None, majoring_value=2, verbose=0
+    ):
         """Estimation of the parameters"""
         n_samples = X.shape[0]
         n_features = Y.shape[1]
@@ -115,12 +118,16 @@ class UTA(object):
         }
         self.marginal_coeffs = marginal_coeffs
         estimate_x = {
-            (i, j): self.solver.addVar(vtype=gp.GRB.CONTINUOUS, name=f"estimate_x_{i}_{j}")
+            (i, j): self.solver.addVar(
+                vtype=gp.GRB.CONTINUOUS, name=f"estimate_x_{i}_{j}"
+            )
             for j in range(n_features)
             for i in range(n_samples)
         }
         estimate_y = {
-            (i, j): self.solver.addVar(vtype=gp.GRB.CONTINUOUS, name=f"estimate_y_{i}_{j}")
+            (i, j): self.solver.addVar(
+                vtype=gp.GRB.CONTINUOUS, name=f"estimate_y_{i}_{j}"
+            )
             for j in range(n_features)
             for i in range(n_samples)
         }
@@ -134,19 +141,27 @@ class UTA(object):
             print("2/ Constraints Definition")
         # [MI - 2]
         lower_bound = {
-            i: self.solver.addConstr(marginal_coeffs[i, 0] == 0, name="lower_bound_normalization")
+            i: self.solver.addConstr(
+                marginal_coeffs[i, 0] == 0, name="lower_bound_normalization"
+            )
             for i in range(n_features)
         }
         sum_to_one = {
             self.solver.addConstr(
-                (gp.quicksum(marginal_coeffs[i, self.n_pieces] for i in range(n_features))) == 1,
+                (
+                    gp.quicksum(
+                        marginal_coeffs[i, self.n_pieces] for i in range(n_features)
+                    )
+                )
+                == 1,
                 name="sum_to_one",
             )
         }
         monotonicity = {
             (i): {
                 k: self.solver.addConstr(
-                    marginal_coeffs[i, k + 1] >= marginal_coeffs[i, k], name="monotonicity"
+                    marginal_coeffs[i, k + 1] >= marginal_coeffs[i, k],
+                    name="monotonicity",
                 )
                 for k in range(self.n_pieces)
             }
@@ -362,20 +377,26 @@ class ClusterUTA(object):
             print("1/ Variables Definition")
 
         marginal_coeffs = {
-            (q, i, j): self.solver.addVar(vtype=gp.GRB.CONTINUOUS, name=f"s_{i}_{j}_{q}")
+            (q, i, j): self.solver.addVar(
+                vtype=gp.GRB.CONTINUOUS, name=f"s_{i}_{j}_{q}"
+            )
             for j in range(self.n_pieces + 1)
             for i in range(n_features)
             for q in range(self.n_clusters)
         }
         self.marginal_coeffs = marginal_coeffs
         estimate_x = {
-            (q, i, j): self.solver.addVar(vtype=gp.GRB.CONTINUOUS, name=f"estimate_x_{q}_{i}_{j}")
+            (q, i, j): self.solver.addVar(
+                vtype=gp.GRB.CONTINUOUS, name=f"estimate_x_{q}_{i}_{j}"
+            )
             for j in range(n_features)
             for i in range(n_samples)
             for q in range(self.n_clusters)
         }
         estimate_y = {
-            (q, i, j): self.solver.addVar(vtype=gp.GRB.CONTINUOUS, name=f"estimate_y_{q}_{i}_{j}")
+            (q, i, j): self.solver.addVar(
+                vtype=gp.GRB.CONTINUOUS, name=f"estimate_y_{q}_{i}_{j}"
+            )
             for j in range(n_features)
             for i in range(n_samples)
             for q in range(self.n_clusters)
@@ -407,7 +428,12 @@ class ClusterUTA(object):
         }
         sum_to_one = {
             self.solver.addConstr(
-                (gp.quicksum(marginal_coeffs[q, i, self.n_pieces] for i in range(n_features))) == 1,
+                (
+                    gp.quicksum(
+                        marginal_coeffs[q, i, self.n_pieces] for i in range(n_features)
+                    )
+                )
+                == 1,
                 name="sum_to_one",
             )
             for q in range(self.n_clusters)
@@ -415,7 +441,8 @@ class ClusterUTA(object):
         monotonicity = {
             (q, i): {
                 k: self.solver.addConstr(
-                    marginal_coeffs[q, i, k + 1] >= marginal_coeffs[q, i, k], name="monotonicity"
+                    marginal_coeffs[q, i, k + 1] >= marginal_coeffs[q, i, k],
+                    name="monotonicity",
                 )
                 for k in range(self.n_pieces)
             }
@@ -440,26 +467,46 @@ class ClusterUTA(object):
             for i in range(n_samples):
                 for j in range(n_features):
                     for k in range(self.n_pieces):
-                        if self.inflexions[j][k] <= X[i][j] <= self.inflexions[j][k + 1]:
+                        if (
+                            self.inflexions[j][k]
+                            <= X[i][j]
+                            <= self.inflexions[j][k + 1]
+                        ):
                             self.solver.addConstr(
                                 estimate_x[q, i, j]
                                 == marginal_coeffs[q, j, k]
                                 + (
                                     (X[i][j] - self.inflexions[j][k])
-                                    / (self.inflexions[j][k + 1] - self.inflexions[j][k])
+                                    / (
+                                        self.inflexions[j][k + 1]
+                                        - self.inflexions[j][k]
+                                    )
                                 )
-                                * (marginal_coeffs[q, j, k + 1] - marginal_coeffs[q, j, k]),
+                                * (
+                                    marginal_coeffs[q, j, k + 1]
+                                    - marginal_coeffs[q, j, k]
+                                ),
                                 name=f"estimate_x_{i}_{j}",
                             )
-                        if self.inflexions[j][k] <= Y[i][j] <= self.inflexions[j][k + 1]:
+                        if (
+                            self.inflexions[j][k]
+                            <= Y[i][j]
+                            <= self.inflexions[j][k + 1]
+                        ):
                             self.solver.addConstr(
                                 estimate_y[q, i, j]
                                 == marginal_coeffs[q, j, k]
                                 + (
                                     (Y[i][j] - self.inflexions[j][k])
-                                    / (self.inflexions[j][k + 1] - self.inflexions[j][k])
+                                    / (
+                                        self.inflexions[j][k + 1]
+                                        - self.inflexions[j][k]
+                                    )
                                 )
-                                * (marginal_coeffs[q, j, k + 1] - marginal_coeffs[q, j, k]),
+                                * (
+                                    marginal_coeffs[q, j, k + 1]
+                                    - marginal_coeffs[q, j, k]
+                                ),
                                 name=f"estimate_y_{i}_{j}",
                             )
         pref = {

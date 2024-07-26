@@ -48,6 +48,7 @@ def kmeans_pp_init(data_points, num_clusters=2, dist="l2"):
         selected_points = np.array(selected_points.tolist() + [next_C])
     return selected_points
 
+
 class PLSHeuristic(object):
     """
     Main class for or PLS Heuristic."""
@@ -125,7 +126,6 @@ class PLSHeuristic(object):
 
         return utilities, clusters
 
-  
     def _update(self, X, Y, verbose=0):
         """Update step of the heuristic for a single cluster.
 
@@ -191,11 +191,16 @@ class PLSHeuristic(object):
             )
             losses_by_init.append(init_losses)
             # Keeping best fit
-            if np.argmin(np.sum(np.array([l[-1] for l in losses_by_init]), axis=1)) == init_nb:
+            if (
+                np.argmin(np.sum(np.array([l[-1] for l in losses_by_init]), axis=1))
+                == init_nb
+            ):
                 self._model_coeffs = init_coeffs
                 best_losses_history = init_losses
 
-            if np.sum(init_losses[-1]) == 0:  # useless to try new initializations, best fit reached
+            if (
+                np.sum(init_losses[-1]) == 0
+            ):  # useless to try new initializations, best fit reached
                 if verbose > 0:
                     print("Loss 0 reached, stopping fit.")
                 break
@@ -203,7 +208,9 @@ class PLSHeuristic(object):
                 print("Loss not 0, continuing fit.", np.sum(init_losses[-1]))
         return losses_by_init, np.array(best_losses_history)
 
-    def _single_fit(self, X, Y, group_ids=None, max_iter=100, stopping_criterion=None, verbose=0):
+    def _single_fit(
+        self, X, Y, group_ids=None, max_iter=100, stopping_criterion=None, verbose=0
+    ):
         """Estimate the models. - can be called several times with n_init.
 
         Parameters
@@ -232,7 +239,9 @@ class PLSHeuristic(object):
         # Initialization
         if self.init == "kmeans++":
             cluster_centers = kmeans_pp_init(X - Y, num_clusters=self.n_clusters)
-            indexes = np.array([D(X[i] - Y[i], clusters=cluster_centers)[1] for i in range(len(X))])
+            indexes = np.array(
+                [D(X[i] - Y[i], clusters=cluster_centers)[1] for i in range(len(X))]
+            )
 
         else:
             raise ValueError(f"Unknwon init method: {self.init}")
@@ -252,9 +261,14 @@ class PLSHeuristic(object):
             if i == 0:
                 # Expectation
                 if self.init == "kmeans++":
-                    cluster_centers = kmeans_pp_init(X - Y, num_clusters=self.n_clusters)
+                    cluster_centers = kmeans_pp_init(
+                        X - Y, num_clusters=self.n_clusters
+                    )
                     indexes = np.array(
-                        [D(X[i] - Y[i], clusters=cluster_centers)[1] for i in range(len(X))]
+                        [
+                            D(X[i] - Y[i], clusters=cluster_centers)[1]
+                            for i in range(len(X))
+                        ]
                     )
 
                 else:
@@ -289,7 +303,10 @@ class PLSHeuristic(object):
                     for j in range(self.n_clusters):
                         bool_index = indexes == j
                         model, history = self._maximization(
-                            X[bool_index], Y[bool_index], sample_weight=weights, verbose=verbose
+                            X[bool_index],
+                            Y[bool_index],
+                            sample_weight=weights,
+                            verbose=verbose,
                         )
                         models.append(model)
 

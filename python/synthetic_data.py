@@ -6,7 +6,9 @@ def get_random_uniform_normalized_vector(num_values, norm_value=1, decimals=6):
     Functions that returns a random and normalized vector W
     W = [wi] such that wi >= 0, sum(wi) = norm_values, i = [1, num_values]
     """
-    initial_vals = np.round(np.random.uniform(0, norm_value, num_values - 1), decimals=decimals)
+    initial_vals = np.round(
+        np.random.uniform(0, norm_value, num_values - 1), decimals=decimals
+    )
     initial_vals = np.sort(initial_vals)
     vect = [norm_value - initial_vals[-1]]
     for i in range(len(initial_vals) - 1):
@@ -23,7 +25,9 @@ def piecewise_linear_value(x, coeffs, min_x=0, max_x=1):
     interval = (max_x - min_x) / (len(coeffs) - 1)
     for i in range(len(coeffs) - 1):
         if x >= min_x + i * interval and x <= min_x + (i + 1) * interval:
-            return coeffs[i] + (coeffs[i + 1] - coeffs[i]) / interval * (x - min_x - i * interval)
+            return coeffs[i] + (coeffs[i + 1] - coeffs[i]) / interval * (
+                x - min_x - i * interval
+            )
 
 
 def create_piecewise_linear_marginal_utility(n_pieces, min_x=0.0, max_x=1.0):
@@ -33,9 +37,12 @@ def create_piecewise_linear_marginal_utility(n_pieces, min_x=0.0, max_x=1.0):
 
     @np.vectorize
     def piecewise_linear_f(x):
-        return piecewise_linear_value(x=x, coeffs=coefficients, min_x=min_x, max_x=max_x)
+        return piecewise_linear_value(
+            x=x, coeffs=coefficients, min_x=min_x, max_x=max_x
+        )
 
     return piecewise_linear_f, coefficients
+
 
 class SyntheticDataGenerator:
     def __init__(
@@ -88,7 +95,9 @@ class SyntheticDataGenerator:
         def _utility(X):
             return np.array([w * f(x) for f, x, w in zip(funcs, X, marginal_weights)])
 
-        params["utility"] = lambda x: np.array([np.sum(_utility(xi)) for xi in np.atleast_2d(x)])
+        params["utility"] = lambda x: np.array(
+            [np.sum(_utility(xi)) for xi in np.atleast_2d(x)]
+        )
 
         return _utility, params
 
@@ -108,7 +117,9 @@ class SyntheticDataGenerator:
         else:
             raise ValueError("Unsupported shape of X", X.shape)
 
-    def generate_data(self, num_pairs, return_utilities=False, return_clusters=False, verbose=0):
+    def generate_data(
+        self, num_pairs, return_utilities=False, return_clusters=False, verbose=0
+    ):
         X, Y = [], []
 
         utilities = [[], []]
@@ -120,8 +131,12 @@ class SyntheticDataGenerator:
         while len(X) < sum(num_pairs):
             if verbose > 0:
                 print(f"{len(X)} events have been created as of now", end="\r")
-            x = np.around(np.random.uniform(0, 1, self.n_criteria), decimals=self.decimals)
-            y = np.around(np.random.uniform(0, 1, self.n_criteria), decimals=self.decimals)
+            x = np.around(
+                np.random.uniform(0, 1, self.n_criteria), decimals=self.decimals
+            )
+            y = np.around(
+                np.random.uniform(0, 1, self.n_criteria), decimals=self.decimals
+            )
 
             ux = np.around(self.utility(x), decimals=self.decimals)
             uy = np.around(self.utility(y), decimals=self.decimals)
@@ -163,10 +178,12 @@ class SyntheticDataGenerator:
         additional_info = {}
         if "weights" in self.generated_parameters[f"DM_0"]:
             for i in range(self.n_clusters):
-                additional_info[f"weights_{i}"] = self.generated_parameters[f"DM_{i}"]["weights"]
-                additional_info[f"marginal_weights_{i}"] = self.generated_parameters[f"DM_{i}"][
-                    "marginal_weights"
+                additional_info[f"weights_{i}"] = self.generated_parameters[f"DM_{i}"][
+                    "weights"
                 ]
+                additional_info[f"marginal_weights_{i}"] = self.generated_parameters[
+                    f"DM_{i}"
+                ]["marginal_weights"]
         if return_utilities:
             additional_info["utilities_x"] = np.array(utilities)[0]
             additional_info["utilities_y"] = np.array(utilities)[1]
