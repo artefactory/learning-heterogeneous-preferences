@@ -43,7 +43,7 @@ If you find this work useful for your research, please cite our paper:
 ```
 @inproceedings{AuriauPLS:2024,
 title={Learning multiple multicriteria additive models from heterogeneous preferences},
-author={Auriau, Vincent and Belahcene, Khaled and Malherbe, Emmanuel and Mousseau, Vincent},
+author={Auriau, Vincent and Belahcène, Khaled and Malherbe, Emmanuel and Mousseau, Vincent},
 booktitle={Algorithmic Decision Theory},
 year={2024},
 }
