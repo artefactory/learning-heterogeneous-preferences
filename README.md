@@ -4,7 +4,7 @@
 
 
 Vincent Auriau<sup>1, 2</sup>, Khaled Belahcène<sup>1</sup>, Emmanuel Malherbe<sup>2</sup>, Vincent Mousseau<sup>1</sup> <br>
-<sup>1</sup> *MICS* - CentraleSupélec, <sup>2</sup> Artefact Research Center <br>
+<sup>1</sup> <sub>*MICS* - CentraleSupélec</sub>, <sup>2</sup> <sub> Artefact Research Center </sub> <br>
 
 In ADT 2024. <br>
 [[Paper]]()  [[Oral Presentation]]()<br>
