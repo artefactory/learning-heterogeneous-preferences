@@ -3,9 +3,10 @@
 # Learning multiple multicriteria additive models from heterogeneous preferences
 
 
-Vincent Auriau, Khaled Belahcène, Emmanuel Malherbe, Vincent Mousseau <br>
-In ADT 2024. <br>
+Vincent Auriau<sup>1, 2</sup>, Khaled Belahcène<sup>1</sup>, Emmanuel Malherbe<sup>2</sup>, Vincent Mousseau<sup>1</sup> <br>
+<sup>1</sup> *MICS* - CentraleSupélec, <sup>2</sup> Artefact Research Center <br>
 
+In ADT 2024. <br>
 [[Paper]]()  [[Oral Presentation]]()<br>
 
 </div>
@@ -27,7 +28,7 @@ cd learning-heterogeneous-preferences
 conda env create -f env.yml
 ```
 
-## Syntetic Experiments
+## Synthetic Experiments
 
 In order to run the experiments with synthetic data you can use the following command:
 
