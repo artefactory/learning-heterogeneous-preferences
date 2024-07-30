@@ -65,7 +65,7 @@ It will estimate the MILO and heuristic models with:
 The notebook [notebooks/cars_results.ipynb](./notebooks/cars_results.ipynb) shows how to read and analyse the results.
 
 ## Using the model on you own data
-<img align="right" width="200" src="doc/icon.png" />
+<img align="right" width="300" src="doc/icon.png" />
 
 The different models can be used on your own data as follows:
 
@@ -73,7 +73,9 @@ The different models can be used on your own data as follows:
 from python.models import UTA, ClusterUTA
 from python.heuristics import Heuristic
 
-model = model(n_pieces=5, n_clusters=3, epsilon=0.05)
+model = model(n_pieces=5,
+              n_clusters=3,
+              epsilon=0.05)
 model.fit(X, Y)
 
 print(model.predict_utilitie(X))
