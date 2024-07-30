@@ -33,21 +33,36 @@ conda env create -f env.yml
 In order to run the experiments with synthetic data you can use the following command:
 
 ```bash
-python run_synthetic_experiments save_xps --repetitions 4 --n_clusters 2 3 4 \
+python run_synthetic_experiments save_xps --base_dir synthetic_xp --repetitions 4 --n_clusters 2 3 4 \
 --n_criteria 6 --learning_set_size 128 1024 --error 0 5
 ```
 
-It will save results in `save_xps` for four different datasets with all the combinations of parameters: 
+It will generate data with four different random seeds and compute the models (milo and heuristic) for all combinations of parameters. Data, models and results are saved in the directory `save_xps`: 
 - n_clusters = [1, 2, 3]
 - n_criteria=6
 - learning_set_size=[128, 1024]
 - error=[0, 5]
 
-## Real-World Experiments
+The notebook [notebooks/synthetic_results.ipynb](./notebooks/synthetic_results.ipynb) shows how to read and analyse the results.
+
+## Real-Data Experiments
 
 The stated preferences for car dataset used in the paper can be downloaded [here](https://github.com/artefactory/choice-learn/blob/main/choice_learn/datasets/data/car.csv.gz).
 It is also part of the [choice-learn](https://pypi.org/project/choice-learn/) package that can be installed with `pip install choice-learn`.
 
+Then, running the following command:
+
+```bash
+python run_cars_experiments save_xps --base_dir cars_xp --repetitions 4 --n_clusters 2 3 4 5 \
+--learning_set_size 128 256 512
+```
+
+It will estimate the MILO and heuristic models with:
+- learning_set_size=[128, 256, 512]
+- 4 different random seeds for train/test split
+- n_clusters=[2, 3, 4, 5]
+
+The notebook [notebooks/cars_results.ipynb](./notebooks/cars_results.ipynb) shows how to read and analyse the results.
 
 ## Using the model on you own data
 <img align="right" width="200" src="doc/icon.png" />
@@ -64,9 +79,14 @@ model.fit(X, Y)
 print(model.predict_utilitie(X))
 ````
 
-All the models have lookalike signatures, in particular, in ```.fit(X, Y)```, X and Y must be:
+All the models have lookalike signatures, in particular, in ```.fit(X, Y)```, X and Y must be the matrixes of same shape where:
+
+- X[i] represents the features of alternative x_i
+- Y[i] represents the features of alternative y_i
+- x_i has been preferred to y_i
 
 More details are given in the docstrings of the models if you want to better understand the different hyper-parameters.
+The notebook [notebooks/train_on_other_data.ipynb](./notebooks/train_on_other_data.ipynb) also shows an example.
 
 ## License
 This work is under the [MIT](./LICENSE) license.
