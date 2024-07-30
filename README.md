@@ -73,10 +73,13 @@ The different models can be used on your own data as follows:
 from python.models import UTA, ClusterUTA
 from python.heuristics import Heuristic
 
-model = model(n_pieces=5,
-              n_clusters=3,
-              epsilon=0.05)
-model.fit(X, Y)
+model = model(
+  n_pieces=5,
+  n_clusters=3,
+  epsilon=0.05
+  )
+
+history = model.fit(X, Y)
 
 print(model.predict_utilitie(X))
 ````
