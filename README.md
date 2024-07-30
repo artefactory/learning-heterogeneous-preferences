@@ -81,7 +81,7 @@ model = ClusterUTA(
 
 history = model.fit(X, Y)
 
-print(model.predict_utilitie(X))
+print(model.predict_utility(X))
 ````
 
 All the models have lookalike signatures, in particular, in ```.fit(X, Y)```, X and Y must be the matrixes of same shape where:
