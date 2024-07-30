@@ -73,7 +73,7 @@ The different models can be used on your own data as follows:
 from python.models import UTA, ClusterUTA
 from python.heuristics import Heuristic
 
-model = model(
+model = ClusterUTA(
   n_pieces=5,
   n_clusters=3,
   epsilon=0.05
