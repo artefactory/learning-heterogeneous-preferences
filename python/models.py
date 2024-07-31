@@ -96,7 +96,7 @@ class UTA(object):
         return solver
 
     def fit(
-        self, X, Y, sample_weight=None, time_limit=None, majoring_value=2, verbose=0
+        self, X, Y, sample_weight=None, time_limit=None, verbose=0
     ):
         """Estimation of the parameters"""
         n_samples = X.shape[0]
