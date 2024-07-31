@@ -185,6 +185,7 @@ class PLSHeuristic(object):
             init_losses, init_coeffs = self._single_fit(
                 X=X,
                 Y=Y,
+                group_ids=group_ids,
                 max_iter=self.max_iter_by_init,
                 stopping_criterion=stopping_criterion,
                 verbose=verbose,
