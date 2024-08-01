@@ -25,7 +25,7 @@ git clone https://github.com/artefactory/learning-heterogeneous-preferences.git
 Install the dependencies:
 ```bash
 cd learning-heterogeneous-preferences
-conda env create -f env.yml
+pip install -r requirements.txt
 ```
 
 ## Synthetic Experiments
