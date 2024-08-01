@@ -1,8 +1,6 @@
-gurobipy==11.0.3
-mkl-fft==1.3.8
-mkl-random==1.2.4
-mkl-service==2.4.0
-numpy==1.26.4
-pip==24.0
-setuptools==69.5.1
-wheel==0.43.0
+choice-learn
+gurobipy~=11.0
+numpy~=1.26
+pip~=24.0
+setuptools~=69.5
+wheel~=0.43
