@@ -1,4 +1,5 @@
 import argparse
+import logging
 import os
 import numpy as np
 import time
@@ -23,6 +24,9 @@ def run_xp(
     n_pieces=5,
 ):
     results_dir = os.path.join(base_dir, f"results/{run_id}")
+    if os.path.exists(results_dir):
+        logging.warning(f"{results_dir} already exists, if results already exist, they will be overwritten.")
+    os.makedirs(results_dir, exist_ok=True)
     X, Y, choice_ids = load_cars_preferences_pairs()
 
     gss = GroupShuffleSplit(n_splits=1, train_size=1-test_size, random_state=seed)
@@ -61,7 +65,7 @@ def run_xp(
             )
 
             heuristic = PLSHeuristic(
-                models_class=UTA, n_clusters=n_clusters, n_init=20
+                models_class=UTA, n_clusters=cluster, n_init=20
             )
             t_start = time.time()
             hist = heuristic.fit(X_train, Y_train)
@@ -159,7 +163,7 @@ if __name__ == "__main__":
             f"train_set_size should be int or list of int and is: {type(train_set_size)}"
         )
     
-    for seed in np.random.randint(low=0, size=(repetitions,)):
+    for seed in np.random.randint(low=0, high=666, size=(repetitions,)):
         for n_p in n_pieces:
             for lss in train_set_size:
                 run_id = f"{lss}_{n_p}_{seed}"

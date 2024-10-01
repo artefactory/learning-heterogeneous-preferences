@@ -33,8 +33,8 @@ pip install -r requirements.txt
 In order to run the experiments with synthetic data you can use the following command:
 
 ```bash
-python run_synthetic_experiments save_xps --base_dir synthetic_xp --repetitions 4 --n_clusters 2 3 4 \
---n_criteria 6 --learning_set_size 128 1024 --error 0 5
+python run_cars_experiments.py save_xps --repetitions 4 --n_clusters 2 3 4 5 \
+--learning_set_size 128 256 512
 ```
 
 It will generate data with four different random seeds and compute the models (milo and heuristic) for all combinations of parameters. Data, models and results are saved in the directory `save_xps`: 
