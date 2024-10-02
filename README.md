@@ -53,13 +53,13 @@ It is also part of the [choice-learn](https://pypi.org/project/choice-learn/) pa
 Then, running the following command:
 
 ```bash
-python run_cars_experiments save_cars_xps --base_dir cars_xp --repetitions 4 --n_clusters 2 3 4 5 \
+python run_cars_experiments save_cars_xps --base_dir cars_xp --repetitions 2 --n_clusters 2 3 4 5 \
 --learning_set_size 128 512
 ```
 
 It will estimate the MILO and heuristic models with:
 - learning_set_size=[128, 512]
-- 4 different random seeds for train/test split
+- 2 different random seeds for train/test split
 - n_clusters=[2, 3, 4, 5]
 
 The notebook [notebooks/cars_results.ipynb](./notebooks/cars_results.ipynb) shows how to read and analyse the results.
