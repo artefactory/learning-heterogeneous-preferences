@@ -65,12 +65,12 @@ def run_xp(
             )
 
             heuristic = PLSHeuristic(
-                models_class=UTA, n_clusters=cluster, n_init=20
+                models_class=UTA, n_clusters=cluster, n_init=4, max_iter_by_init=20
             )
             t_start = time.time()
             hist = heuristic.fit(X_train, Y_train)
             t_end = time.time()
-            np.save(os.path.join(base_dir, f"heuristic_{cluster}_clusters_{ds}.npy"), heuristic.coeffs)
+            np.save(os.path.join(base_dir, f"heuristic_{cluster}_clusters_{ds}.npy"), np.stack([md.coeffs for md in heuristic.models]))
             np.save(os.path.join(base_dir, f"{cluster}_clusters_{ds}_heuristic_fit_time.npy"), np.array(t_end - t_start))
 
 if __name__ == "__main__":
