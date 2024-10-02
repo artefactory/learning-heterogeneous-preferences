@@ -6,7 +6,7 @@
 Vincent Auriau<sup>1, 2</sup>, Khaled Belahcène<sup>1</sup>, Emmanuel Malherbe<sup>2</sup>, Vincent Mousseau<sup>1</sup> <br>
 <sup>1</sup> <sub>*MICS* - CentraleSupélec,</sub> <sup>2</sup> <sub> Artefact Research Center </sub> <br>
 
-In ADT 2024. <br>
+In [ADT 2024](https://preflib.github.io/adt2024/index). <br>
 [[Full Paper]]()  [[Appendices]](./Appendices.pdf)  [[Oral Presentation]]()<br>
 
 </div>
@@ -53,7 +53,7 @@ It is also part of the [choice-learn](https://pypi.org/project/choice-learn/) pa
 Then, running the following command:
 
 ```bash
-python run_cars_experiments save_cars_xps --base_dir cars_xp --repetitions 2 --n_clusters 2 3 4 5 \
+python run_cars_experiments.py save_cars_xps --repetitions 2 --n_clusters 2 3 4 5 \
 --learning_set_size 128 512
 ```
 
