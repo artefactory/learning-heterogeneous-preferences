@@ -111,7 +111,7 @@ def evaluation_routine(
     model.save_model(results_dir)
     np.save(os.path.join(results_dir, f"milo_fit_time.npy"), np.array(uta_train_time))
 
-    with open(os.path.join(results_dir, "status.txt"), "w") as f:
+    with open(os.path.join(results_dir, "milo_status.txt"), "w") as f:
         f.write(f"{model.status}\n")
 
     

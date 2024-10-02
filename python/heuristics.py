@@ -104,6 +104,8 @@ class PLSHeuristic(object):
             utilities = [[u] for u in utilities]
         utilities = np.stack(utilities, axis=1)
         utilities = np.squeeze(utilities)
+        if len(utilities.shape) == 1:
+            utilities = utilities.reshape(-1, 1)
 
         clusters = np.argmax(utilities, axis=1)
 
@@ -354,3 +356,7 @@ class PLSHeuristic(object):
     def predict_cluster(self, X, Y):
         utilities, clusters, _ = self._assignment(X, Y)
         return clusters
+
+    @property
+    def coeffs(self):
+        return np.stack([md.coeffs for md in self.models])

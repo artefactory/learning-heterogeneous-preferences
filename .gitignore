@@ -163,3 +163,8 @@ cython_debug/
 
 # Mac
 .DS_Store
+
+# Repo XPs directories
+save_xps/
+save_synth_xps/
+save_cars_xps/
