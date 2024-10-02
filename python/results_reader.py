@@ -1,22 +1,38 @@
 """Classes to read saved files from experiments."""
 import itertools
+import json
 import os
 
 import numpy as np
 import pandas as pd
-import preference_learning.metrics as metrics
 import tqdm
-from preference_learning.utils.functions import piecewise_linear_f
+
+from python import metrics
+
+def piecewise_linear_f(coefficients, min_x=0, max_x=1):
+    def get_marginal_utility(marg_coefficients, value):
+        inflexions_x = []
+
+        for i in range(len(marg_coefficients) - 1):
+            inflexions_x.append(min_x + i * ((max_x - min_x) / len(marg_coefficients[:-1])))
+        inflexions_x.append(max_x)
+
+        for i in range(len(inflexions_x) - 1):
+            if value >= inflexions_x[i] and value <= inflexions_x[i + 1]:
+                utility = marg_coefficients[i] + (
+                    marg_coefficients[i + 1] - marg_coefficients[i]
+                ) * (value - inflexions_x[i]) / (inflexions_x[i + 1] - inflexions_x[i])
+        return utility
 
 
 class PLResultsReader(object):
     filepaths = {
         "data": "data.csv",
         "params": "params.txt",
-        "u_train_x_pred": "u_train_x_pred.csv",
-        "u_test_x_pred": "u_test_x_pred.csv",
-        "u_train_y_pred": "u_train_y_pred.csv",
-        "u_test_y_pred": "u_test_y_pred.csv",
+        "u_train_x_pred": "u_x_train.csv",
+        "u_test_x_pred": "u_x_test.csv",
+        "u_train_y_pred": "u_y_train.csv",
+        "u_test_y_pred": "u_y_test.csv",
     }
 
     def __init__(self, dir_path, model_name):
@@ -57,102 +73,31 @@ class PLResultsReader(object):
         self.data_weights = np.load(os.path.join(self.dir_path, "data_weights.npy"))
         marginal_weights = np.load(os.path.join(self.dir_path, "marginal_data_weights.npy"))
         self.data_weights = self.data_weights * np.expand_dims(marginal_weights, axis=-1)
-        self.pred_weights = np.load(
-            os.path.join(self.dir_path, self.model_name + "_" + "pred_weights.npy")
-        )
+        
         self.fit_time = np.load(os.path.join(self.dir_path, self.model_name + "_" + "fit_time.npy"))
-        self.fit_status = np.loadtxt(
-            os.path.join(self.dir_path, f"{self.model_name}_status.txt"), dtype=str
-        )
-        self.params = np.loadtxt(os.path.join(self.dir_path, f"params.txt"), dtype=str)
-        self.params = self.read_params()
+        try:
+            self.fit_status = np.loadtxt(
+                os.path.join(self.dir_path, f"{self.model_name}_status.txt"), dtype=str
+            )
+        except:
+            self.fit_status = "0"
+        with open(os.path.join(self.dir_path, f"params.json"), "r") as f:
+            self.params = json.load(f)
 
         self.results_metrics = {}
 
     def compute_metrics(self):
         lss = self.params["learning_set_size"]
         pe = metrics.PairsExplained()
-        ci = metrics.ClusterIntersection()
-        cp = metrics.MonteCarloCommonPreferences(n_features=self.params["n_features"])
-        new_adjusted_rand_index = metrics.RandIndex(adjusted=True)
-        new_rand_index = metrics.RandIndex(adjusted=False)
         self.results_metrics["explained_pairs_test"] = pe(
             Ux=self.u_test_x.values, Uy=self.u_test_y.values
         )
         self.results_metrics["explained_pairs_train"] = pe(
             Ux=self.u_train_x.values, Uy=self.u_train_y.values
         )
-        self.results_metrics["rand_index_test"] = ci(
-            y_pred=np.argmax(self.u_test_x.values - self.u_test_y.values, axis=1),
-            y_true=self.data.cluster.values[lss:],
-        )
-        self.results_metrics["rand_index_train"] = ci(
-            y_pred=np.argmax(self.u_train_x.values - self.u_train_y.values, axis=1),
-            y_true=self.data.cluster.values[:lss],
-        )
-        self.results_metrics["new_rand_index_test"] = new_rand_index(
-            y_pred=np.argmax(self.u_test_x.values - self.u_test_y.values, axis=1),
-            y_true=self.data.cluster.values[lss:],
-        )
-        self.results_metrics["new_rand_index_train"] = new_rand_index(
-            y_pred=np.argmax(self.u_train_x.values - self.u_train_y.values, axis=1),
-            y_true=self.data.cluster.values[:lss],
-        )
-        self.results_metrics["new_adjusted_rand_index_test"] = new_adjusted_rand_index(
-            y_pred=np.argmax(self.u_test_x.values - self.u_test_y.values, axis=1),
-            y_true=self.data.cluster.values[lss:],
-        )
-        self.results_metrics["new_adjusted_rand_index_train"] = new_adjusted_rand_index(
-            y_pred=np.argmax(self.u_train_x.values - self.u_train_y.values, axis=1),
-            y_true=self.data.cluster.values[:lss],
-        )
-        self.results_metrics["max_adjusted_rand_index_test"] = new_adjusted_rand_index(
-            y_pred=np.argmax(self.u_test_x.values - self.u_test_y.values, axis=1),
-            y_true=np.argmax(self.gt_ux[lss:] - self.gt_uy[lss:], axis=1),
-        )
-        self.results_metrics["max_adjusted_rand_index_train"] = new_adjusted_rand_index(
-            y_pred=np.argmax(self.u_train_x.values - self.u_train_y.values, axis=1),
-            y_true=np.argmax(self.gt_ux[:lss] - self.gt_uy[:lss], axis=1),
-        )
-
-        gt_distance = []
-        for i in range(self.params["n_decisions_makers"] - 1):
-            for j in range(i + 1, self.params["n_decisions_makers"]):
-                ux = piecewise_linear_f(self.data_weights[i])
-                uy = piecewise_linear_f(self.data_weights[j])
-                gt_distance.append(cp.from_utility_functions(ux, uy))
-        self.results_metrics["average_truth_similarity"] = np.mean(gt_distance)
-        self.results_metrics["min_truth_similarity"] = np.min(gt_distance)
-        self.results_metrics["max_truth_similarity"] = np.max(gt_distance)
-        self.results_metrics["median_truth_similarity"] = np.median(gt_distance)
-        self.results_metrics["std_truth_similarity"] = np.std(gt_distance)
-
-        truth_predict_distances = []
-        for i in range(self.data_weights.shape[0]):
-            data_row = []
-            for j in range(self.pred_weights.shape[0]):
-                ux = piecewise_linear_f(self.data_weights[i])
-                uy = piecewise_linear_f(self.pred_weights[j])
-                data_row.append(cp.from_utility_functions(ux, uy))
-            truth_predict_distances.append(data_row)
-
-        truth_predict_scores = []
-        for var in itertools.permutations(
-            list(range(self.params["n_decisions_makers"])), self.u_test_x.values.shape[1]
-        ):
-            score = []
-            for i, j in enumerate(var):
-                score.append(truth_predict_distances[i][j])
-            truth_predict_scores.append(np.mean(score))
-        self.results_metrics["average_truth_predict_similarity"] = np.max(truth_predict_scores)
 
         self.results_metrics["fit_time"] = self.fit_time
         self.results_metrics["fit_status"] = self.fit_status
-
-class HeuristicReader(object):
-    """"""
-    def __init__(self):
-        pass
 
 
 class ExperimentsReader(object):
