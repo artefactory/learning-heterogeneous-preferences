@@ -7,7 +7,7 @@ Vincent Auriau<sup>1, 2</sup>, Khaled Belahcène<sup>1</sup>, Emmanuel Malherbe<
 <sup>1</sup> <sub>*MICS* - CentraleSupélec,</sub> <sup>2</sup> <sub> Artefact Research Center </sub> <br>
 
 In [ADT 2024](https://preflib.github.io/adt2024/index). <br>
-[[Full Paper]]()  [[Appendices]](./Appendices.pdf)  [[Oral Presentation]]()<br>
+[[Full Paper]](https://link.springer.com/chapter/10.1007/978-3-031-73903-3_14)  [[Appendices]](./Appendices.pdf)  [[Oral Presentation]]()<br>
 
 </div>
 
@@ -100,12 +100,23 @@ This work is under the [MIT](./LICENSE) license.
 If you find this work useful for your research, please cite our paper:
 
 ```
-@inproceedings{AuriauPLS:2024,
-title={Learning multiple multicriteria additive models from heterogeneous preferences},
-author={Auriau, Vincent and Belahcène, Khaled and Malherbe, Emmanuel and Mousseau, Vincent},
-booktitle={Algorithmic Decision Theory},
-year={2024},
+@InProceedings{AuriauPLS:2024,
+author="Auriau, Vincent
+and Belahc{\`e}ne, Khaled
+and Malherbe, Emmanuel
+and Mousseau, Vincent",
+editor="Freeman, Rupert
+and Mattei, Nicholas",
+title="Learning Multiple Multicriteria Additive Models from Heterogeneous Preferences",
+booktitle="Algorithmic Decision Theory",
+year="2025",
+publisher="Springer Nature Switzerland",
+address="Cham",
+pages="207--224",
+isbn="978-3-031-73903-3"
 }
+
+
 ```
 
 
