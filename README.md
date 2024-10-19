@@ -86,9 +86,9 @@ print(model.predict_utility(X))
 
 All the models have lookalike signatures, in particular, in ```.fit(X, Y)```, X and Y must be the matrixes of same shape where:
 
-- X[i] represents the features of alternative x_i
-- Y[i] represents the features of alternative y_i
-- x_i has been preferred to y_i
+- X[i] represents the features of alternative $x_i$
+- Y[i] represents the features of alternative $y_i$
+- $x_i$ has been preferred to $y_i$
 
 More details are given in the docstrings of the models if you want to better understand the different hyper-parameters.
 The notebook [notebooks/train_on_other_data.ipynb](./notebooks/train_on_other_data.ipynb) also shows an example.
