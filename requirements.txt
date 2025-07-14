@@ -2,5 +2,5 @@ choice-learn
 gurobipy~=11.0
 numpy~=1.26
 pip~=24.0
-setuptools~=69.5
+setuptools~=80.7
 wheel~=0.43
